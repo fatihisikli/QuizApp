@@ -1,0 +1,539 @@
+﻿@{
+    Layout = null;
+}
+<html lang="tr">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>github.com/fatihisikli</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <div class="container">
+        <input type="checkbox" id="check">
+        <div class="login form">
+            <header id="login">QuizApp</header>
+            <header id="login">Giriş Yap</header>
+
+            <input class="secim" type="text" name="username" id="username" placeholder="Email adresinizi giriniz" required>
+            <input class="secim" type="password" name="password" id="password" placeholder="Şifrenizi giriniz" required>
+            <a href="#">Şifremi Unuttum</a>
+            <input id="girisbutonu" class="secim" type="submit" value="giriş yap">
+
+            <div class="signup">
+                <span class="signup">
+                    Kayıt olmak için
+                    <label for="check">Tıklayınız</label>
+                </span>
+            </div>
+        </div>
+        <div class="registration form">
+            <header>Kayıt Ol</header> 
+                <input class="secim" id="Ad" name="Ad" type="text" placeholder="Isminiz" required>
+                <input class="secim" id="Soyad" name="Soyad" type="text" placeholder="Soyadınız" required>
+                <input id="Dogum_Tarihi" name="Dogum_Tarihi" class="secim" type="text" placeholder="Doğum Tarihiniz" required>
+                <select class="secim" name="Medeni_Hali" id="Medeni_Hali" required>
+                    <option value="">Medeni Haliniz</option>
+                    <option value="Bekar">Bekar</option>
+                    <option value="Evli">Evli</option>
+                </select>
+                @*<input class="secim" type="text" placeholder="Mesleğiniz" required>*@
+                <select class="secim" id="Egitimi" name="Egitimi" required>
+                    <option value="">Eğitim Durumunuz</option>
+                    <option value="Yok">Yok</option>
+                    <option value="İlköğretim">İlköğretim</option>
+                    <option value="Ortaokul">Ortaokul</option>
+                    <option value="Lise">Lise</option>
+                    <option value="Üniversite">Üniversite</option>
+                    <option value="Yüksek Lisans">Yüksek Lisans</option>
+                    <option value="Doktora">Doktora</option>
+                </select>
+                <input id="GSM_No" name="GSM_No" class="secim" type="text" placeholder="Telefon Numaranızı Giriniz" minlength="10" maxlength="10" required>
+                <select class="secim" id="Il" name="Il" required>
+                    <option value="">Lütfen Bir İl Seçiniz</option>
+                    <option value="1234">Test</option>
+                </select>
+
+                <select class="secim" id="Ilce" name="Ilce"  required>
+                    <option value="">Lütfen Önce bir İl seçiniz</option>
+                    <option value="1">Test</option>
+                </select>
+                <input class="secim" id="Adres"  type="text" name="Adres" placeholder="Adresiniz" required>
+                <input class="secim" id="Adres1" type="text" name="Adres1" placeholder="Adres Devamı">
+                <input class="secim" id="Email"  type="text" name="Email" oninput="validateEmail()" placeholder="E-mail Adresiniz" required>
+                <input type="password" class="secim" id="Sifre" name="Sifre" placeholder="Şifre Giriniz" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+
+                <div id="password-message">
+                    <h3>Şifre oluşturma şartları</h3>
+                    <p class="password-message-item invalid">
+                        En az
+                        <b>bir küçük harf</b>
+                    </p>
+                    <p class="password-message-item invalid">
+                        En az
+                        <b>bir büyük harf</b>
+                    </p>
+                    <p class="password-message-item invalid">
+                        En az
+                        <b>bir rakam</b>
+                    </p>
+                    <p class="password-message-item invalid">
+                        Minimum
+                        <b>8 karakter</b>
+                    </p>
+                </div>
+
+                <input class="secim" type="password" id="confirmPassword" placeholder="Şifreyi Doğrulayınız" required><br>
+                <div class="password-match-status"></div>
+                <div class="password-not-match-status">Şifreler Eşleşmedi</div>
+
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" name="Chk_Kvkk" id="invalidCheck" required>
+                        <label class="form-check-label" for="invalidCheck">
+                            KVKK Açık Rıza Onayına İzin veriyorum.
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" name="Chk_Sozlesme" id="invalidCheck" required>
+                        <label class="form-check-label" for="invalidCheck">
+                            Sözleşme Koşulları kabul onayı
+                        </label>
+
+                    </div>
+                </div>
+                <input class="secim" id="submitButton" type="button" value="Üye Ol">
+                <div class="signup">
+                    <span class="signup">
+                        Hesabınız varsa
+                        <label for="check">Tıklayınız</label>
+                    </span>
+                </div>
+             
+        </div>
+
+    </div>
+    <script>
+
+        $(document).ready(function () {
+            $('#Dogum_Tarihi').mask('00/00/0000', {
+                placeholder: 'Doğum Tarihinizi Girin GG/AA/YYYY'
+            });
+        });
+
+        $(document).ready(function () {
+            $('#GSM_No').mask('000 000 00 00', {
+                placeholder: 'Telefon Numaranızı Giriniz'
+            });
+        });
+
+        var passwordInput = document.getElementById("Sifre");
+        var passwordMessageItems = document.getElementsByClassName("password-message-item");
+        var passwordMessage = document.getElementById("password-message");
+
+
+        passwordInput.onfocus = function () {
+            passwordMessage.style.display = "block";
+        }
+
+        passwordInput.onblur = function () {
+            passwordMessage.style.display = "none";
+        }
+
+        passwordInput.onkeyup = function () {
+            let uppercaseRegex = /[A-Z]/g;
+            if (passwordInput.value.match(uppercaseRegex)) {
+                passwordMessageItems[1].classList.remove("invalid");
+                passwordMessageItems[1].classList.add("valid");
+            } else {
+                passwordMessageItems[1].classList.remove("valid");
+                passwordMessageItems[1].classList.add("invalid");
+            }
+
+            let lowercaseRegex = /[a-z]/g;
+            if (passwordInput.value.match(lowercaseRegex)) {
+                passwordMessageItems[0].classList.remove("invalid");
+                passwordMessageItems[0].classList.add("valid");
+            } else {
+                passwordMessageItems[0].classList.remove("valid");
+                passwordMessageItems[0].classList.add("invalid");
+            }
+
+            let numbersRegex = /[0-9]/g;
+            if (passwordInput.value.match(numbersRegex)) {
+                passwordMessageItems[2].classList.remove("invalid");
+                passwordMessageItems[2].classList.add("valid");
+            } else {
+                passwordMessageItems[2].classList.remove("valid");
+                passwordMessageItems[2].classList.add("invalid");
+            }
+
+            if (passwordInput.value.length >= 8) {
+                passwordMessageItems[3].classList.remove("invalid");
+                passwordMessageItems[3].classList.add("valid");
+            } else {
+                passwordMessageItems[3].classList.remove("valid");
+                passwordMessageItems[3].classList.add("invalid");
+            }
+        }
+
+        const passwordInputCW = document.getElementById("Sifre");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const matchStatusDiv = document.querySelector(".password-match-status");
+        const notMatchStatusDiv = document.querySelector(".password-not-match-status");
+        const submitButton = document.getElementById("submitButton");
+
+        function checkPasswordMatch() {
+            const password = passwordInputCW.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (password === confirmPassword) {
+                matchStatusDiv.style.display = "block";
+                notMatchStatusDiv.style.display = "none";
+                submitButton.disabled = false;
+            } else {
+                matchStatusDiv.style.display = "none";
+                notMatchStatusDiv.style.display = "block";
+                submitButton.disabled = true;
+            }
+        }
+
+        passwordInputCW.addEventListener("input", checkPasswordMatch);
+        confirmPasswordInput.addEventListener("input", checkPasswordMatch);
+
+
+        function validateEmail() {
+            const emailInput = document.getElementById("Email").value;
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const submitButton = document.getElementById("submitButton");
+
+            if (emailRegex.test(emailInput)) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+
+
+        //sayfaya geçme
+
+
+
+        $(document).ready(function () {
+            $("#password").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#girisbutonu").click();
+                }
+            });
+            $("#girisbutonu").click(() => {
+
+
+                var frm = new FormData()
+                frm.append("username", $("#username").val())
+                frm.append("password", $("#password").val())
+                buttonopen()
+
+                $.ajax({
+                    url: "/Login/CheckLogin",
+                    data: frm,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: (data) => {
+                        if (data.login) {
+
+                            $("#alert_success").fadeIn();
+                            setTimeout(() => {
+                                window.location.href = "/Home/Quiz";
+                            }, 750)
+
+
+                        } else {
+
+                            $("#alert_danger").fadeIn();
+                        }
+                    },
+                });
+
+            })
+
+            //kayıt ol butonu
+            $("#submitButton").click(() => {
+
+                var frm = new FormData()
+
+                frm.append("Ad", $("#Ad").val())
+                frm.append("Soyad", $("#Soyad").val())
+                frm.append("Dogum_Tarihi", $("#Dogum_Tarihi").val())
+                frm.append("Medeni_Hali", $("#Medeni_Hali").val())
+                frm.append("Egitimi", $("#Egitimi").val())
+                frm.append("GSM_No", $("#GSM_No").val())
+                frm.append("Il", $("#Il").val())
+                frm.append("Ilce", $("#Ilce").val())
+                frm.append("Adres", $("#Adres").val())
+                frm.append("Adres1", $("#Adres1").val())
+                frm.append("Email", $("#Email").val())
+                frm.append("Sifre", $("#Sifre").val())
+
+                $.ajax({
+                    url: "/Login/SignUp",
+                    data: frm,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: (data) => {
+                        console.log(data)
+                        //if (data.login) {
+
+                        //    $("#alert_success").fadeIn();
+                        //    setTimeout(() => {
+                        //        window.location.href = "/Home/Quiz";
+                        //    }, 750)
+
+
+                        //} else {
+                        //    $("#alert_danger").fadeIn();
+                        //}
+                    },
+                });
+
+            })
+        });
+
+
+        function closeSession(username) {
+            $.ajax({
+                type: "POST",
+                url: "/Login/CloseAnotherSession",
+                data: { "username": username },
+                success: (data) => {
+                    buttonclose()
+                    if (data) {
+                        $("#alert_success").fadeIn();
+                        setTimeout(() => {
+                            window.location.href = "/Home/Quiz";
+                        }, 3000)
+                    }
+                },
+                error: (xhr, status) => { },
+                complete: (xhr, status) => {
+                }
+            });
+        }
+        function buttonopen() {
+            $("#btn_login").prop("disabled", true);
+            // add spinner to button
+            $("#btn_login").html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Giriş Yapılıyor...');
+
+        }
+        function buttonclose() {
+            $("#btn_login").prop("disabled", false);
+            // add spinner to button
+            $("#btn_login").html('Login');
+        }
+
+    </script>
+</body>
+
+</html>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        width: 100%;
+        background: rgba(13, 136, 236, 0.3);
+    }
+
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        max-width: 430px;
+        width: 100%;
+        background: #fff;
+        border-radius: 7px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+
+        .container .registration {
+            display: none;
+        }
+
+    #check:checked ~ .registration {
+        display: block;
+    }
+
+    #check:checked ~ .login {
+        display: none;
+    }
+
+    #check {
+        display: none;
+    }
+
+    .container .form {
+        padding: 2rem;
+    }
+
+    .form header {
+        margin-top: 600px;
+        font-size: 2rem;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form #login {
+        margin-top: 0;
+        font-size: 2rem;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form .secim {
+        height: 60px;
+        width: 100%;
+        padding: 0 15px;
+        font-size: 17px;
+        margin-bottom: 1.3rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        outline: none;
+    }
+
+        .form .secim:focus {
+            box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+        }
+
+    .form a {
+        font-size: 16px;
+        color: rgba(13, 136, 236, 0.5);
+        text-decoration: none;
+    }
+
+        .form a:hover {
+            text-decoration: underline;
+        }
+
+    .form .button {
+        color: #fff;
+        background: rgba(13, 136, 236, 0.9);
+        font-size: 1.2rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        margin-top: 1.7rem;
+        cursor: pointer;
+        transition: 0.4s;
+    }
+
+        .form .button:hover {
+            background: rgba(13, 136, 236, 0.4);
+        }
+
+    .signup {
+        font-size: 17px;
+        text-align: center;
+    }
+
+        .signup label {
+            color: rgba(13, 136, 236, 0.7);
+            cursor: pointer;
+        }
+
+            .signup label:hover {
+                text-decoration: underline;
+            }
+
+    #password-message {
+        display: none;
+        background: #ffffff;
+        color: #000;
+        position: relative;
+        padding: 20px;
+        margin-top: 10px;
+        text-align: left;
+        font-size: 13px;
+    }
+
+        #password-message h3 {
+            font-size: 15px;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        #password-message p {
+            margin: 8px 0;
+        }
+
+    .valid {
+        color: black;
+    }
+
+        .valid:before {
+            position: relative;
+            left: -35px;
+            content: "✔";
+        }
+
+    .invalid {
+        color: gray;
+    }
+
+        .invalid:before {
+            position: relative;
+            left: -35px;
+            content: "✖";
+        }
+
+    .error-msg {
+        color: red;
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    .password-match-status {
+        color: green;
+        display: none;
+    }
+
+    .password-not-match-status {
+        color: red;
+        display: none;
+    }
+
+    #submitButton {
+        display: block;
+        margin-top: 10px;
+    }
+
+        #submitButton:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+</style>

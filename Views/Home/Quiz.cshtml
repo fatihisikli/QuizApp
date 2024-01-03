@@ -1,0 +1,680 @@
+﻿@model List<QuizApp.Models.Database.dboSorular>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>github.com/fatihisikli</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="main.css">
+</head>
+<body class="flex">
+    <div class="wrapper">
+        <div class="quiz-container">
+            <div class="quiz-head">
+                <h3 class="quiz-maintitle">QuizApp</h3>
+                <div id="divButon">
+                    <h3 style="background-color:mediumpurple; color:white;" class="quiz-ana">Lütfen Sınav Seviyenizi Seçiniz</h3>
+                    <div class="quiz-foot">
+                        <button type="button" id="basitButon">Basit</button>
+                    </div>
+                    <div class="quiz-foot">
+                        <button type="button" id="ortaButon">Orta</button>
+
+                    </div>
+                    <div class="quiz-foot">
+                        <button type="button" id="zorButon">İleri</button>
+                    </div>
+                </div>
+                <div id="divUyari" style="display: none;">
+                    <h3 style="background-color:mediumpurple; color:white;" class="quiz-ana">Kurallar</h3>
+                    <div id="quiz-kural-tablosu">
+                        <h5 id="quiz_SaniyeB" class="quiz-kural"><b>• Süre ve Soru Sayısı:</b>Her soru için 30 saniye verilir, toplamda 10 soru vardır.</h5>
+                        <h5 id="quiz_SaniyeO" class="quiz-kural"><b>• Süre ve Soru Sayısı:</b>Her soru için 40 saniye verilir, toplamda 10 soru vardır.</h5>
+                        <h5 id="quiz_SaniyeZ" class="quiz-kural"><b>• Süre ve Soru Sayısı:</b>Her soru için 50 saniye verilir, toplamda 10 soru vardır.</h5>
+                        <h5 class="quiz-kural"><b>• Cevap Puanlama:</b>4 yanlış 1 doğruyu götürür. Yanlışlar puan kaybına yol açar.</h5>
+                        <h5 class="quiz-kural"><b>• Cevap Değiştirme:</b>Soruya cevap verip bir sonraki soruya atlarsanız, geçtiğiniz soruya bir daha geri dönemezsiniz.</h5>
+                    </div>
+
+                    <div class="quiz-foot">
+                        <button type="button" id="divUyariButon">Onaylıyorum</button>
+                    </div>
+                </div>
+                <div id="div-Quiz" style="display: none;">
+                    <h3 style="background-color:mediumpurple; color:white;" class="quiz-ana">Soruları Cevaplayınız</h3>
+                    <div id="kalanZaman" style="text-align:right;">Cevap Süreniz 0:<span id="count">30</span></div>
+                    <div class="quiz-score flex">
+                        <span id="kacinci-soru">1</span>/<span id="kac_soru">10</span>
+                    </div>
+                    <div class="quiz-body">
+                        <h2 class="quiz-question" id="question">What is the full form of HTTP?</h2>
+                        <ul id="choice-list" class="quiz-options">
+                            <li class="choice" id="s1">1. Hyper text transfer package</li>
+                            <li class="choice" id="s2">2. Hyper text transfer protocol</li>
+                            <li class="choice" id="s3">3. Hyphenation text test program</li>
+                            <li class="choice" id="s4">4. None of the above</li>
+                        </ul>
+                        <div id="result">
+                        </div>
+                    </div>
+                    <div id="quizKontrol" class="quiz-foot">
+                        <button class="custom-button" type="button" id="diger_Buton">Diğer Soruya Geç</button>
+                    </div>
+                    <div id="correctdiv">
+                        <label for="">Doğru Cevap Sayısı: </label>
+                        <b><span id="correct">0</span></b>
+                    </div>
+                    <div id="incorrectdiv">
+                        <label for="">Yanlış Cevap Sayısı: </label>
+                        <b> <span id="incorrect">0</span></b>
+                    </div>
+                    <input type="hidden" id="zorluk_seviyesi" />
+                    <input type="hidden" id="soru_id" />
+                    <p type="hidden" id="sorumettt"></p>
+                </div>
+                <div id="divSonuc" style="display:none">
+                    <h3 style="background-color:blue; color:white;" class="quiz-ana">Sonuç Ekranı</h3>
+                    <div id="quiz-sonuc-tablosu">
+                        <h5 class="quiz-kural">Doğru Cevap Sayısı :<b><span style="color:limegreen" id="correctsonuc"></span></b></h5>
+                        <h5 class="quiz-kural">Yanlış Cevap Sayısı :<b><span style="color:darkred" id="incorrectsonuc"></span></b></h5>
+                        <h5 class="quiz-kural">Skor :<b><span id="skorsonuc"></span></b></h5>
+                        <h5 class="quiz-kural">Kazanılan TL :<b><span id="tlsonuc"></span></b></h5>
+                        <canvas id="chartId" aria-label="chart" height="350" width="580"></canvas>
+                        <button class="custom-button" type="button" id="bitir_Buton">Sınavı Bitir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var choices = document.querySelectorAll(".choice");
+            choices.forEach(function (choice) {
+                choice.addEventListener("click", function () {
+                    var selectedText = choice.textContent; // Tıklanan elementin içeriğini alın
+                    console.log(selectedText); // Alınan içeriği konsolda görüntüleyin (istediğiniz işlemi yapabilirsiniz)
+                });
+            });
+    </script>
+
+    <script>
+        const myElement = document.querySelector('#question');
+        const myElement1 = document.querySelector('#s1');
+        const myElement2 = document.querySelector('#s2');
+        const myElement3 = document.querySelector('#s3');
+        const myElement4 = document.querySelector('#s4');
+        const soru_id = document.querySelector('#soru_id');
+        let gelenVeriler;
+        let dogruSayac = 0;
+        let yanlisSayac = 0;
+        $("#basitButon").click(() => {
+            $.ajax({
+                url: "/Home/VeriCekK",
+                dataType: "json",
+                cache: false,
+                processData: false,
+                contentType: "application/json",
+                type: 'GET',
+                success: (data) => {
+                    console.log(data)
+                    gelenVeriler = data;
+                },
+                error: (xhr, status, error) => {
+                    console.log("AJAX hatası:", error);
+                },
+                async: false, // Bu satır senkron olarak işlem yapılmasını sağlar
+            });
+        })
+        $("#ortaButon").click(() => {
+            $.ajax({
+                url: "/Home/VeriCekO",
+                dataType: "json",
+                cache: false,
+                processData: false,
+                contentType: "application/json",
+                type: 'GET',
+                success: (data) => {
+                    console.log(data)
+                    gelenVeriler = data;
+                },
+                error: (xhr, status, error) => {
+                    console.log("AJAX hatası:", error);
+                },
+                async: false, // Bu satır senkron olarak işlem yapılmasını sağlar
+            });
+        })
+        $("#zorButon").click(() => {
+            $.ajax({
+                url: "/Home/VeriCekZ",
+                dataType: "json",
+                cache: false,
+                processData: false,
+                contentType: "application/json",
+                type: 'GET',
+                success: (data) => {
+                    console.log(data)
+                    gelenVeriler = data;
+                },
+                error: (xhr, status, error) => {
+                    console.log("AJAX hatası:", error);
+                },
+                async: false, // Bu satır senkron olarak işlem yapılmasını sağlar
+            });
+        })
+        function checkAnswerAndProcess(selectedText) {
+            var frm = new FormData();
+            frm.append("Dogru_Cevap", selectedText);
+            frm.append("Soru_Kodu", document.getElementById("sorumettt").innerText);
+            $.ajax({
+                url: "/Home/CevapKontrol",
+                data: frm,
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: (data) => {
+                    console.log(data);
+                    if (data.result) {
+                        chartData[0]++;
+                        chartData[2]--;
+                        chart.update();
+                        dogruSayac++;
+                        _result.innerHTML = `<p><i class="fas fa-check"></i> <span style="color: limegreen;">Doğru Cevap!</span></p>`;
+                        correct.textContent = dogruSayac;
+                        correctsonuc.textContent = dogruSayac;
+                        selectedChoice.style.color = "limegreen";
+                    } else {
+                        chartData[1]++;
+                        chartData[2]--;
+                        chart.update();
+                        _result.innerHTML = `<p><i class="fas fa-times"></i> <span style="color: darkred;">Yanlış Cevap!</span></p>`;
+                        yanlisSayac++;
+                        incorrect.textContent = yanlisSayac;
+                        incorrectsonuc.textContent = yanlisSayac;
+                        selectedChoice.style.color = "darkred";
+                    }
+                    chart.update();
+                    skorsonuc.textContent = dogruSayac - yanlisSayac / 4;
+                    tlsonuc.textContent = 2;
+                },
+            });
+        }
+
+        var selectedChoice = null; // Seçilen öğeyi depolamak için global bir değişken
+        var choiceElements = document.querySelectorAll(".choice");
+        choiceElements.forEach(function (choiceElement) {
+            choiceElement.addEventListener("click", function () {
+                if (!selectedChoice) { // Eğer daha önce bir seçim yapılmamışsa
+                    selectedChoice = choiceElement;
+                    // Seçimi işaretleme işlemi
+                    selectedChoice.classList.add("selected");
+                    // Diğer işlemleri yap
+                    var selectedText = selectedChoice.innerText;
+                    checkAnswerAndProcess(selectedText);
+                }
+            });
+        });
+        var texts = ["", ""]; // İki farklı metin
+        var currentTextIndex = 0; // Başlangıçta ilk metin gösterilecek
+        var chrt = document.getElementById("chartId"); // Canvas elementini alıyoruz
+        var ctx = chrt.getContext("2d");
+        var chartData = [0, 0, 10]; // Örnek veri
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ["Doğru Cevap", "Yanlış Cevap", "Boş Cevap"],
+                datasets: [{
+                    data: chartData,
+                    backgroundColor: ['limegreen', 'darkred', 'blue'],
+                    hoverOffset: 7
+                }],
+            },
+            options: {
+                responsive: false,
+            },
+            plugins: [{
+                id: 'text',
+                beforeDraw: function (chart, args, options) {
+                    var width = chart.width,
+                        height = chart.height,
+                        ctx = chart.ctx;
+
+                    ctx.restore();
+                    var fontSize = (height / 250).toFixed(2);
+                    ctx.font = fontSize + "em sans-serif";
+                    ctx.textBaseline = "middle";
+
+                    var text = texts[currentTextIndex];
+                    var textX = Math.round((width - ctx.measureText(text).width) / 2);
+                    var textY = height / 2;
+
+                    ctx.fillText(text, textX, textY);
+                    ctx.save();
+                }
+            }]
+        });
+
+        function updateText() {
+            currentTextIndex = (currentTextIndex + 1) % texts.length;
+        }
+
+        setInterval(updateText, 2000); // Her 2 saniyede bir metni güncelle
+
+        document.querySelectorAll(".choice").forEach(li => {
+            li.addEventListener("click", function () {
+                document.querySelectorAll(".choice").forEach(el => el.classList.remove("selected"));
+                this.classList.add("selected");
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            var diger_Buton = document.getElementById("diger_Buton");
+            var divSayacSoru = document.getElementById("kacinci-soru");
+            var divquiz = document.getElementById("div-Quiz");
+            const countdownElement = document.getElementById("count");
+            var basmaSayisi = 1;
+            let countdownValue = 7;
+            let countdownInterval;
+            function sayac() {
+                basmaSayisi++;
+                divSayacSoru.textContent = basmaSayisi;
+                if (basmaSayisi >= 11) {
+
+                    divquiz.style.display = "none";
+                    divSonuc.style.display = "block";
+                }
+            }
+            function startCountdown() {
+                clearInterval(countdownInterval); // Daha önceki geri sayımı durdur
+                countdownValue = 30; // Geri sayım değerini sıfırla
+                countdownElement.textContent = countdownValue;
+
+                countdownInterval = setInterval(() => {
+                    countdownValue--;
+                    countdownElement.textContent = countdownValue;
+                    if (countdownValue === 0) {
+                        clearInterval(countdownInterval);
+                        diger_Buton.click(); // Buton 2'yi otomatik olarak tıkla
+                    }
+                }, 1000);
+            }
+            diger_Buton.addEventListener("click", sayac);
+            diger_Buton.addEventListener("click", startCountdown);
+            divUyariButon.addEventListener("click", startCountdown);
+            document.getElementById("diger_Buton").addEventListener("click", function () {
+                for (let i = 0; i < choiceElements.length; i++) {
+                    choiceElements[i].style.color = "white";
+                }
+                setTimeout(function () {
+                    var selectedLi = document.querySelector(".choice.selected");
+                    if (selectedLi) {
+                        selectedLi.classList.remove("selected");
+                    }
+                    if (selectedChoice) {
+                        selectedChoice.classList.remove("selected");
+                        selectedChoice = null;
+                    }
+                    const randomSayi = Math.floor(Math.random() * 10);
+                    console.log(gelenVeriler.result[randomSayi].soru_Metni);
+                    let yanliscevaplar = [
+                        gelenVeriler.result[randomSayi].yanlis_Cevap1,
+                        gelenVeriler.result[randomSayi].yanlis_Cevap2,
+                        gelenVeriler.result[randomSayi].yanlis_Cevap3
+                    ];
+                    const answerChoices = [myElement1, myElement2, myElement3, myElement4];
+                    const choiceList = document.getElementById("choice-list");
+                    for (let i = answerChoices.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [answerChoices[i], answerChoices[j]] = [answerChoices[j], answerChoices[i]];
+                        choiceList.appendChild(answerChoices[i]);
+                    }
+                    myElement.textContent = gelenVeriler.result[randomSayi].soru_Metni;
+                    myElement1.textContent = gelenVeriler.result[randomSayi].dogru_Cevap;
+                    myElement2.textContent = gelenVeriler.result[randomSayi].yanlis_Cevap1;
+                    myElement3.textContent = gelenVeriler.result[randomSayi].yanlis_Cevap2;
+                    myElement4.textContent = gelenVeriler.result[randomSayi].yanlis_Cevap3;
+                    soru_id.textContent = gelenVeriler.result[randomSayi].soru_Kodu;
+                    sorumettt.textContent = gelenVeriler.result[randomSayi].soru_Kodu;
+                    _result.innerHTML = "";
+                }, 400); // 300 milisaniye (0.3 saniye) gecikme
+            });
+        });
+
+        $("#bitir_Buton").click(() => {
+            var frm = new FormData()
+            frm.append("Dogru_Cevap", document.getElementById("correctsonuc").innerText)
+            frm.append("Yanlis_Cevap", document.getElementById("incorrectsonuc").innerText)
+            frm.append("Skor", document.getElementById("skorsonuc").innerText)
+            $.ajax({
+                url: "/Home/SinavSkor",
+                data: frm,
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: (data) => {
+                    console.log(data)
+                    if (data.login) {
+                        settimeout(() => {
+                            window.location.href = "/Login";
+                        }, 750)
+                    } else {
+                        $("#alert_danger").fadeIn();
+                    }
+                },
+                async: false, // Bu satır senkron olarak işlem yapılmasını sağlar
+            });
+
+        })
+
+        document.getElementById("divUyariButon").addEventListener("click", function () {
+            const randomSayi = Math.floor(Math.random() * 10);
+            console.log(gelenVeriler.result[randomSayi].soru_Metni)
+            myElement.textContent = gelenVeriler.result[randomSayi].soru_Metni;
+            myElement1.textContent = gelenVeriler.result[randomSayi].dogru_Cevap;
+            myElement2.textContent = gelenVeriler.result[randomSayi].yanlis_Cevap1;
+            myElement3.textContent = gelenVeriler.result[randomSayi].yanlis_Cevap2;
+            myElement4.textContent = gelenVeriler.result[randomSayi].yanlis_Cevap3;
+            soru_id.textContent = gelenVeriler.result[randomSayi].soru_Kodu;
+            sorumettt.textContent = gelenVeriler.result[randomSayi].soru_Kodu;
+
+        });
+
+
+
+    </script>
+    <script>
+
+
+        var basitButon = document.getElementById("basitButon");
+        var ortaButon = document.getElementById("ortaButon");
+        var zorButon = document.getElementById("zorButon");
+        var divButon = document.getElementById("divButon");
+        var divQuiz = document.getElementById("div-Quiz");
+        var correct = document.getElementById("correct");
+        var incorrect = document.getElementById("incorrect");
+        var divUyari = document.getElementById("divUyari");
+        var divUyariButon = document.getElementById("divUyariButon");
+        var correctsonuc = document.getElementById("correctsonuc");
+        var incorrectsonuc = document.getElementById("incorrectsonuc");
+        var skorsonuc = document.getElementById("skorsonuc");
+        var tlsonuc = document.getElementById("tlsonuc");
+        var _result = document.getElementById("result");
+        var _quizSaniye = document.getElementById("quiz_Saniye");
+
+        basitButon.addEventListener("click", function () {
+            divButon.style.display = "none";
+            quiz_SaniyeO.style.display = "none";
+            quiz_SaniyeZ.style.display = "none";
+            divUyari.style.display = "block";
+
+        });
+
+        ortaButon.addEventListener("click", function () {
+            divButon.style.display = "none";
+            divUyari.style.display = "block";
+            quiz_SaniyeB.style.display = "none";
+            quiz_SaniyeZ.style.display = "none";
+        });
+
+        zorButon.addEventListener("click", function () {
+            divButon.style.display = "none";
+            divUyari.style.display = "block";
+            quiz_SaniyeO.style.display = "none";
+            quiz_SaniyeB.style.display = "none";
+        });
+        divUyari.addEventListener("click", function () {
+            divUyari.style.display = "none";
+            divQuiz.style.display = "block";
+            __quizSaniye.innerHtml
+
+        });
+    </script>
+</body>
+</html>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --light-purple-color: #8854C0;
+        --light-color: #fff;
+        --dark-color: #000;
+        --grey-color: #f2f2f2;
+        --transition: all 300ms ease-in-out;
+    }
+
+    .flex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    body {
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+        color: var(--dark-color);
+        background: var(--grey-color);
+    }
+
+    .wrapper {
+        background: var(--light-color);
+        padding: 1.5rem 4rem 3rem 4rem;
+        width: 600px;
+        height: 850px;
+        border-top-left-radius: 1.5rem;
+        border-bottom-right-radius: 1.5rem;
+        position: relative;
+        box-shadow: 0 4px 6px rgb(0 0 0 / 10%), 0 1px 3px rgb(0 0 0 / 10%);
+    }
+
+    .quiz-maintitle {
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: normal;
+    }
+
+    .quiz-ana {
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: normal;
+    }
+
+    .quiz-kural {
+        text-align: left;
+        font-size: 1rem;
+        font-weight: normal;
+    }
+
+    .quiz-kural-tablosu {
+        margin-top: 4.5rem;
+    }
+
+    .quiz-sonuc-tablosu {
+        margin-top: 4.5rem;
+    }
+
+    .quiz-title {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: lighter;
+        color: var(--light-purple-color);
+    }
+
+    .quiz-score {
+        text-align: right;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        border: 5px solid var(--grey-color);
+        font-weight: bold;
+        width: 100px;
+        height: 50px;
+        margin: .5rem auto 1rem auto;
+        color: var(--light-purple-color);
+    }
+
+    .quiz-question {
+        font-size: 1.2rem;
+        text-align: center;
+        line-height: 1.3;
+        margin-bottom: 2rem;
+    }
+
+        .quiz-question .category {
+            font-size: 0.9rem;
+            font-weight: 500;
+            background-color: var(--light-purple-color);
+            padding: .2rem .4rem;
+            border-radius: .2rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+    .quiz-options {
+        list-style-type: none;
+        margin: 1rem 0;
+    }
+        .quiz-options li {
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin: .7rem 0;
+            padding: .4rem 1.2rem;
+            cursor: pointer;
+            border: 3px solid var(--light-purple-color);
+            background-color: var(--light-purple-color);
+            color: var(--light-color);
+            box-shadow: 0 4px 0 0 #6c4298;
+            transition: var(--transition);
+        }
+
+            .quiz-options li:hover {
+                background-color: var(--grey-color);
+                color: var(--dark-color);
+                border-color: var(--grey-color);
+                box-shadow: 0 4px 0 0 #bbbbbb;
+            }
+
+            .quiz-options li:active {
+                transform: scale(0.97);
+            }
+    /* js related */
+
+    .quiz-foot button {
+        border: none;
+        border-radius: 0.5rem;
+        outline: 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: .5rem 1rem;
+        margin-top: 3.5rem;
+        margin-left: auto;
+        margin-right: auto;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: block;
+        background-color: var(--grey-color);
+        color: var(--dark-color);
+        letter-spacing: 2px;
+        transition: var(--transition);
+        box-shadow: 0 4px 0 0 #bbbbbb;
+    }
+        .quiz-foot button:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 4px 0 0 #a7a7a7;
+        }
+
+        .quiz-foot button:active {
+            transform: scale(0.95);
+        }
+    #result {
+        padding: .7rem 0;
+        text-align: center;
+        font-weight: 600;
+        font-size: 1.3rem;
+    }
+
+        #result i {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            line-height: 30px;
+            margin-right: .5rem;
+            margin-bottom: .5rem;
+            background-color: var(--light-purple-color);
+            color: var(--light-color);
+        }
+    @@media(max-width: 678px) {
+        .quiz-title {
+            font-size: 1.6rem;
+        }
+
+        .wrapper {
+            margin: 3rem 0;
+            width: 90%;
+            height: 90%;
+            padding: 1.5rem 1rem 3rem 1rem;
+            border-top-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .quiz-foot button {
+            font-size: 1rem;
+        }
+    }
+    #correctdiv {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1000px;
+        font-weight: lighter;
+        width: 250px;
+        height: 50px;
+        margin: 4.5rem auto 0 auto;
+        float: left;
+        color: var(--light-purple-color);
+    }
+
+    #incorrectdiv {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1000px;
+        font-weight: lighter;
+        width: 250px;
+        height: 50px;
+        margin: 0.5rem auto 0 auto;
+        float: left;
+        color: var(--light-purple-color);
+    }
+
+    #quizKontrol {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .custom-button {
+        padding: 10px 20px;
+        margin: 10px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+        .custom-button:hover {
+            background-color: #2980b9;
+        }
+</style>

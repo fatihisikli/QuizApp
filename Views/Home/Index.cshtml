@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!-- Meta etiketleri, belge başlığı ve karakter seti tanımlamaları -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>github.com/fatihisikli</title>
+    <!-- Favicon tanımlaması -->
+    <link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <!-- Dış kütüphanelerin ve stil dosyalarının eklenmesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="main.css">
+</head>
+<body class="flex">
+    <!-- Ana wrapper -->
+    <div class="wrapper">
+        <!-- Quiz container -->
+        <div class="quiz-container">
+            <!-- Quiz başlığı ve seviye seçenekleri -->
+            <div class="quiz-head">
+                <h3 class="quiz-maintitle">QuizApp</h3>
+                <div id="divButon">
+                    <h3 class="quiz-ana">Lütfen Seviyenizi Seçiniz</h3>
+                    <div class="quiz-foot">
+                        <button type="button" id="basitButon">Basit Seviye Sınav</button>
+                    </div>
+                    <div class="quiz-foot">
+                        <button type="button" id="ortaButon">Orta Seviye Sınav</button>
+                    </div>
+                    <div class="quiz-foot">
+                        <button type="button" id="zorButon">Zor Seviye Sınav   </button>
+                    </div>
+                </div>
+                <!-- Kullanıcıyı bilgilendiren kurallar ve onay butonu -->
+                <div id="divUyari" style="display: none;">
+                    <h3 class="quiz-ana">Kurallar</h3>
+                    <div id="quiz-kural-tablosu">
+                        <h5 class="quiz-kural"><b>• Süre ve Soru Sayısı:</b>Her soru için X saniye verilir, toplamda 10 soru vardır.</h5>
+                        <h5 class="quiz-kural"><b>• Cevap Puanlama:</b>4 yanlış 1 doğruyu götürür. Yanlışlar puan kaybına yol açar.</h5>
+                        <h5 class="quiz-kural"><b>• Cevap Değiştirme:</b>Soruya cevap verip bir sonraki soruya atlarsanız, geçtiğiniz soruya bir daha geri dönemezsiniz.</h5>
+                        <h5 class="quiz-kural"><b>• Kötüye Kullanım:</b>Hile veya kötüye kullanım durumunda gerekli yaptırımlar uygulanır.</h5>
+                    </div>
+                    <div class="quiz-foot">
+                        <button type="button" id="divUyariButon">Onaylıyorum</button>
+                    </div>
+                </div>
+                <!-- Quiz sorularının bulunduğu bölüm -->
+                <div id="div-Quiz" style="display: none;">
+                    <h3 class="quiz-ana">Soruları Cevaplayınız</h3>
+                    <!-- Soru sayısını ve sıradaki soruyu gösteren bölüm -->
+                    <div class="quiz-score flex">
+                        <span id="kacinci-soru">1</span>/<span id="kac_soru">10</span>
+                    </div>
+                    <!-- Soru ve cevap seçenekleri -->
+                    <div class="quiz-body">
+                        <h2 class="quiz-question" id="question">HTTP'nin tam açılımı nedir?</h2>
+                        <ul id="choice-list" class="quiz-options">
+                            <li class="choice" id="s1">1. Hyper text transfer package</li>
+                            <li class="choice" id="s2">2. Hyper text transfer protocol</li>
+                            <li class="choice" id="s3">3. Hyphenation text test program</li>
+                            <li class="choice" id="s4">4. Yukarıdakilerin hiçbiri</li>
+                        </ul>
+                        <div id="result">
+                        </div>
+                    </div>
+                    <!-- Cevap kontrol ve diğer soruya geçme butonları -->
+                    <div id="quizKontrol" class="quiz-foot">
+                        <button class="custom-button" type="button" id="check-answer">Cevabı Kontrol Et</button>
+                        <button class="custom-button" type="button" id="diger_Buton">Diğer Soruya Geç</button>
+                    </div>
+                    <!-- Doğru ve yanlış cevap sayılarını gösteren bölüm -->
+                    <div id="correctdiv">
+                        <label for="">Doğru Cevap Sayısı: </label>
+                        <b><span id="correct">0</span></b>
+                    </div>
+                    <div id="incorrectdiv">
+                        <label for="">Yanlış Cevap Sayısı: </label>
+                        <b> <span id="incorrect">0</span></b>
+                    </div>
+                    <!-- Gizli input alanları -->
+                    <input type="hidden" id="zorluk_seviyesi" />
+                    <input type="hidden" id="soru_id" />
+                    <p type="hidden" id="sorumettt"></p>
+                </div>
+                <!-- Sonuç ekranını gösteren bölüm -->
+                <div id="divSonuc" style="display:none">
+                    <h3 class="quiz-ana">Sonuç Ekranı</h3>
+                    <div id="quiz-kural-tablosu">
+                        <h5 class="quiz-kural">Doğru Cevap Sayısı :<b><span id="correctsonuc"></span></b></h5>
+                        <h5 class="quiz-kural">Yanlış Cevap Sayısı :<b><span id="incorrectsonuc"></span></b></h5>
+                        <h5 class="quiz-kural">Skor :<b><span id="skorsonuc"></span></b></h5>
+                        <h5 class="quiz-kural">Kazanılan TL :<b><span id="tlsonuc"></span></b></h5>
+                        <button class="custom-button" type="button" id="bitir_Buton">Sınavı Bitir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- JavaScript ve jQuery kodları -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script>
+            // Doküman yüklendiğinde çalışacak olan fonksiyon
+            $(document).ready(function () {              
+
+                // Doğum tarihini belirtilen formatta maskeler
+                $('#Dogum_Tarihi').mask('00/00/0000', {
+                    placeholder: 'Doğum Tarihinizi Girin GG/AA/YYYY'
+                });
+
+                // GSM numarasını belirtilen formatta maskeler
+                $('#GSM_No').mask('000 000 00 00', {
+                    placeholder: 'Telefon Numaranızı Giriniz'
+                });
+
+                // Şifre girişiyle ilgili kontroller
+                var passwordInput = document.getElementById("Sifre");
+                var passwordMessageItems = document.getElementsByClassName("password-message-item");
+                var passwordMessage = document.getElementById("password-message");
+
+                // Şifre girişine odaklanıldığında gösterilecek mesaj
+                passwordInput.onfocus = function () {
+                    passwordMessage.style.display = "block";
+                }
+
+                // Şifre girişinden çıkıldığında mesajı gizler
+                passwordInput.onblur = function () {
+                    passwordMessage.style.display = "none";
+                }
+
+                // Şifre girişi sırasında gerçekleşen her tuşa basımında kontroller yapar
+                passwordInput.onkeyup = function () {
+                    let uppercaseRegex = /[A-Z]/g;
+                    if (passwordInput.value.match(uppercaseRegex)) {
+                        passwordMessageItems[1].classList.remove("invalid");
+                        passwordMessageItems[1].classList.add("valid");
+                    } else {
+                        passwordMessageItems[1].classList.remove("valid");
+                        passwordMessageItems[1].classList.add("invalid");
+                    }
+
+                    let lowercaseRegex = /[a-z]/g;
+                    if (passwordInput.value.match(lowercaseRegex)) {
+                        passwordMessageItems[0].classList.remove("invalid");
+                        passwordMessageItems[0].classList.add("valid");
+                    } else {
+                        passwordMessageItems[0].classList.remove("valid");
+                        passwordMessageItems[0].classList.add("invalid");
+                    }
+
+                    let numbersRegex = /[0-9]/g;
+                    if (passwordInput.value.match(numbersRegex)) {
+                        passwordMessageItems[2].classList.remove("invalid");
+                        passwordMessageItems[2].classList.add("valid");
+                    } else {
+                        passwordMessageItems[2].classList.remove("valid");
+                        passwordMessageItems[2].classList.add("invalid");
+                    }
+
+                    if (passwordInput.value.length >= 8) {
+                        passwordMessageItems[3].classList.remove("invalid");
+                        passwordMessageItems[3].classList.add("valid");
+                    } else {
+                        passwordMessageItems[3].classList.remove("valid");
+                        passwordMessageItems[3].classList.add("invalid");
+                    }
+                }
+
+                // Şifre ve tekrar şifre girişlerinin eşleşip eşleşmediğini kontrol eder
+                const passwordInputCW = document.getElementById("Sifre");
+                const confirmPasswordInput = document.getElementById("confirmPassword");
+                const matchStatusDiv = document.querySelector(".password-match-status");
+                const notMatchStatusDiv = document.querySelector(".password-not-match-status");
+                const submitButton = document.getElementById("submitButton");
+                function checkPasswordMatch() {
+                    const password = passwordInputCW.value;
+                    const confirmPassword = confirmPasswordInput.value;
+
+                    if (password === confirmPassword) {
+                        matchStatusDiv.style.display = "block";
+                        notMatchStatusDiv.style.display = "none";
+                        submitButton.disabled = false;
+                    } else {
+                        matchStatusDiv.style.display = "none";
+                        notMatchStatusDiv.style.display = "block";
+                        submitButton.disabled = true;
+                    }
+                }
+                // Şifre girişi ve tekrar şifre girişi alanlarında her tuşa basıldığında kontrolü sağlar
+                passwordInputCW.addEventListener("input", checkPasswordMatch);
+                confirmPasswordInput.addEventListener("input", checkPasswordMatch);
+
+                // E-posta adresinin geçerliliğini kontrol eder
+                function validateEmail() {
+                    const emailInput = document.getElementById("Email").value;
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    const submitButton = document.getElementById("submitButton");
+
+                    if (emailRegex.test(emailInput)) {
+                        submitButton.disabled = false;
+                    } else {
+                        submitButton.disabled = true;
+                    }
+                }
+                // Sayfa geçiş işlemleri ve AJAX isteği
+                $(document).ready(function () {
+                    // Enter tuşuna basıldığında giriş butonuna tıklanması
+                    $("#password").keyup(function (event) {
+                        if (event.keyCode === 13) {
+                            $("#girisbutonu").click();
+                        }
+                    });
+
+                    // Giriş butonuna tıklanıldığında AJAX ile kullanıcı girişi kontrolü
+                    $("#girisbutonu").click(() => {
+                        var frm = new FormData()
+                        frm.append("username", $("#username").val())
+                        frm.append("password", $("#password").val())
+                        buttonopen()
+
+                        $.ajax({
+                            url: "/Login/CheckLogin",
+                            data: frm,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            success: (data) => {
+                                if (data.login) {
+                                    $("#alert_success").fadeIn();
+                                    setTimeout(() => {
+                                        window.location.href = "/Home/Quiz";
+                                    }, 750)
+                                } else {
+                                    $("#alert_danger").fadeIn();
+                                }
+                            },
+                        });
+                    })
+                    // Kayıt ol butonuna tıklanıldığında AJAX ile kullanıcı kaydı
+                    $("#submitButton").click(() => {
+                        var frm = new FormData()
+
+                        frm.append("TCKN", $("#TCKN").val())
+                        frm.append("Ad", $("#Ad").val())
+                        frm.append("Soyad", $("#Soyad").val())
+                        frm.append("Dogum_Tarihi", $("#Dogum_Tarihi").val())
+                        frm.append("Medeni_Hali", $("#Medeni_Hali").val())
+                        frm.append("Egitimi", $("#Egitimi").val())
+                        frm.append("GSM_No", $("#GSM_No").val())
+                        frm.append("Il", $("#Il").val())
+                        frm.append("Ilce", $("#Ilce").val())
+                        frm.append("Adres", $("#Adres").val())
+                        frm.append("Adres1", $("#Adres1").val())
+                        frm.append("Email", $("#Email").val())
+                        frm.append("Sifre", $("#Sifre").val())
+                        frm.append("IBAN_No", $("#IBAN_No").val())
+                        $.ajax({
+                            url: "/Login/SignUp",
+                            data: frm,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            type: 'POST',
+                            success: (data) => {
+                                console.log(data)
+                            },
+                        });
+
+                    })
+                });
+                // Oturumu kapatma işlemi için AJAX isteği
+                function closeSession(username) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Login/CloseAnotherSession",
+                        data: { "username": username },
+                        success: (data) => {
+                            buttonclose()
+                            if (data) {
+                                $("#alert_success").fadeIn();
+                                setTimeout(() => {
+                                    window.location.href = "/Home/Quiz";
+                                }, 3000)
+                            }
+                        },
+                        error: (xhr, status) => { },
+                        complete: (xhr, status) => {
+                        }
+                    });
+                }
+                // Butonu kapatma fonksiyonu
+                function buttonopen() {
+                    $("#btn_login").prop("disabled", true);
+                    // Butona spinner ekler
+                    $("#btn_login").html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Giriş Yapılıyor...');
+                }
+
+                // Butonu kapatma fonksiyonu
+                function buttonclose() {
+                    $("#btn_login").prop("disabled", false);
+                    // Butondan spinner'ı kaldırır
+                    $("#btn_login").html('Login');
+                }
+            });
+
+        </script>
+    </div>
+</body>
+</html>
